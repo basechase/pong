@@ -19,28 +19,31 @@ namespace pong
       
             int count = 0;
         private float _speed = 0.05f;
-        private Vector2 _position1;
-        private Vector2 _position2;
+        private Matrix3 _position1;
+        private Matrix3 _position2;
         private Vector2 _ball;
         private Vector2 _ballVelocity;
-         
-       
+
+
         
         public void Run()
         {
+            _position1.m00 = 50;  
+            _position1.m22 = 400; 
 
-            
+            _position2.m00 = 1150; 
+            _position2.m22 = 400; 
+
             Raylib.InitWindow(1200, 800, "Hello World");
 
 
             //pos for both blocks
-            _position1 = new Vector2(100, 400);
-            _position2 = new Vector2(1100, 400);
+            
             _ball = new Vector2(400, 500);
             _ballVelocity = new Vector2(0.05f, 0.05f);
             while (!Raylib.WindowShouldClose())
             {
-
+               
                 
                 movementInput();
                 Update();
@@ -58,8 +61,8 @@ namespace pong
                 
 
                 Raylib.DrawCircle((int)_ball.x, (int)_ball.y, 6, Color.Pink);
-                Raylib.DrawRectangle((int)_position1.x, (int)_position1.y, 5, 50, Color.White);
-                Raylib.DrawRectangle((int)_position2.x, (int)_position2.y, 5, 50, Color.White);
+                Raylib.DrawRectangle((int)_position1.m00, (int)_position1.m22, 5, 50, Color.White);
+                Raylib.DrawRectangle((int)_position2.m00, (int)_position2.m22, 5, 50, Color.White);
                 Raylib.EndDrawing();
 
 
@@ -70,19 +73,19 @@ namespace pong
         private void movementInput()
         {
             if (Raylib.IsKeyDown(KeyboardKey.W))
-                _position1.y -= _speed;
+                _position1.m22 -= _speed;
             if (Raylib.IsKeyDown(KeyboardKey.S))
-                _position1.y += _speed;
-
+                _position1.m22 += _speed;
+            
             if (Raylib.IsKeyDown(KeyboardKey.Up))
-                _position2.y -= _speed;
+                _position2.m22 -= _speed;
             if (Raylib.IsKeyDown(KeyboardKey.Down))
-                _position2.y += _speed;
+                _position2.m22 += _speed;
 
 
             //clamps so they stop flying away
-            _position1.y = Math.Clamp(_position1.y, 0, Raylib.GetScreenHeight() - 50);
-            _position2.y = Math.Clamp(_position2.y, 0, Raylib.GetScreenHeight() - 50);
+            _position1.m22= Math.Clamp(_position1.m22, 0, Raylib.GetScreenHeight() - 50);
+            _position2.m22 = Math.Clamp(_position2.m22, 0, Raylib.GetScreenHeight() - 50);
         }
 
 
@@ -99,20 +102,20 @@ namespace pong
             }
 
             // collides with left side
-            if (_ball.x <= _position1.x + 5 && _ball.y >= _position1.y && _ball.y <= _position1.y + 50)
+            if (_ball.x <= _position1.m00 + 5 && _ball.y >= _position1.m22 && _ball.y <= _position1.m22 + 50)
             {
                 _ballVelocity.x = -_ballVelocity.x;  // invert horizontal direction
                 count++;
             }
 
             //collides with right side
-            if (_ball.x >= _position2.x - 10 && _ball.y >= _position2.y && _ball.y <= _position2.y + 50)
+            if (_ball.x >= _position2.m00- 10 && _ball.y >= _position2.m22 && _ball.y <= _position2.m22 + 50)
             {
                 _ballVelocity.x = -_ballVelocity.x;  // invert horizontal direction
                 count++;
             }
 
-          //add to see how many time the ball bounces
+          
 
             // ball goes out of bounds
             if (_ball.x <= 0 || _ball.x >= Raylib.GetScreenWidth())
