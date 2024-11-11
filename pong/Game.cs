@@ -8,16 +8,18 @@ using System.Threading.Tasks;
 using MathForGamesDemo;
 using Raylib_cs;
 using MathLibrary;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+
 
 
 namespace pong
 {
     internal class Game
     {
+
       
             int count = 0;
+        private float _rotation1 = 0f;
+        private float _rotation2 = 0f;
         private float _speed = 0.05f;
         private Matrix3 _position1;
         private Matrix3 _position2;
@@ -61,8 +63,8 @@ namespace pong
                 
 
                 Raylib.DrawCircle((int)_ball.x, (int)_ball.y, 6, Color.Pink);
-                Raylib.DrawRectangle((int)_position1.m00, (int)_position1.m22, 5, 50, Color.White);
-                Raylib.DrawRectangle((int)_position2.m00, (int)_position2.m22, 5, 50, Color.White);
+                Raylib.DrawRectangle((int)_position1.m00, (int)_position1.m22, 5, 150, Color.White);
+                Raylib.DrawRectangle((int)_position2.m00, (int)_position2.m22, 5, 150, Color.White);
                 Raylib.EndDrawing();
 
 
@@ -76,6 +78,8 @@ namespace pong
                 _position1.m22 -= _speed;
             if (Raylib.IsKeyDown(KeyboardKey.S))
                 _position1.m22 += _speed;
+          
+            
             
             if (Raylib.IsKeyDown(KeyboardKey.Up))
                 _position2.m22 -= _speed;
@@ -84,8 +88,8 @@ namespace pong
 
 
             //clamps so they stop flying away
-            _position1.m22= Math.Clamp(_position1.m22, 0, Raylib.GetScreenHeight() - 50);
-            _position2.m22 = Math.Clamp(_position2.m22, 0, Raylib.GetScreenHeight() - 50);
+            _position1.m22= Math.Clamp(_position1.m22, 0, Raylib.GetScreenHeight() - 100);
+            _position2.m22 = Math.Clamp(_position2.m22, 0, Raylib.GetScreenHeight() - 100);
         }
 
 
@@ -102,14 +106,14 @@ namespace pong
             }
 
             // collides with left side
-            if (_ball.x <= _position1.m00 + 5 && _ball.y >= _position1.m22 && _ball.y <= _position1.m22 + 50)
+            if (_ball.x <= _position1.m00 + 5 && _ball.y >= _position1.m22 && _ball.y <= _position1.m22 + 150)
             {
                 _ballVelocity.x = -_ballVelocity.x;  // invert horizontal direction
                 count++;
             }
 
             //collides with right side
-            if (_ball.x >= _position2.m00- 10 && _ball.y >= _position2.m22 && _ball.y <= _position2.m22 + 50)
+            if (_ball.x >= _position2.m00- 10 && _ball.y >= _position2.m22 && _ball.y <= _position2.m22 + 150)
             {
                 _ballVelocity.x = -_ballVelocity.x;  // invert horizontal direction
                 count++;
@@ -117,13 +121,13 @@ namespace pong
 
           
 
-            // ball goes out of bounds
+            
             if (_ball.x <= 0 || _ball.x >= Raylib.GetScreenWidth())
             {
-                // If the ball misses both paddles, exit the game
+                
                 if (_ball.x <= 0 || _ball.x >= Raylib.GetScreenWidth())
                 {
-                    Raylib.CloseWindow(); // Close the game window
+                    Raylib.CloseWindow(); 
                 }
 
 
