@@ -18,12 +18,11 @@ namespace pong
 
       
             int count = 0;
-        private float _rotation1 = 0f;
-        private float _rotation2 = 0f;
+        
         private float _speed = 0.05f;
         private Matrix3 _position1;
         private Matrix3 _position2;
-        private Vector2 _ball;
+        private Matrix3 _ball;
         private Vector2 _ballVelocity;
 
 
@@ -41,8 +40,11 @@ namespace pong
 
             //pos for both blocks
             
-            _ball = new Vector2(400, 500);
-            _ballVelocity = new Vector2(0.05f, 0.05f);
+            
+
+            _ball.m00 = 400;
+            _ball.m22 = 500;
+            _ballVelocity = new Vector2(0.0005f, 0.05f);
             while (!Raylib.WindowShouldClose())
             {
                
@@ -62,11 +64,10 @@ namespace pong
             Raylib.DrawText("bounce count" + count.ToString(), 450, 0, 10, Color.White);
                 
 
-                Raylib.DrawCircle((int)_ball.x, (int)_ball.y, 6, Color.Pink);
-                Raylib.DrawRectangle((int)_position1.m00, (int)_position1.m22, 5, 150, Color.White);
+                Raylib.DrawCircle((int)_ball.m00, (int)_ball.m22, 6, Color.Pink);
+                Raylib.DrawRectangle((int)_position1.m00 , (int)_position1.m22, 5, 150, Color.White);
                 Raylib.DrawRectangle((int)_position2.m00, (int)_position2.m22, 5, 150, Color.White);
                 Raylib.EndDrawing();
-
 
 
             }
@@ -79,6 +80,7 @@ namespace pong
             if (Raylib.IsKeyDown(KeyboardKey.S))
                 _position1.m22 += _speed;
           
+
             
             
             if (Raylib.IsKeyDown(KeyboardKey.Up))
@@ -88,32 +90,32 @@ namespace pong
 
 
             //clamps so they stop flying away
-            _position1.m22= Math.Clamp(_position1.m22, 0, Raylib.GetScreenHeight() - 100);
-            _position2.m22 = Math.Clamp(_position2.m22, 0, Raylib.GetScreenHeight() - 100);
+            _position1.m22= Math.Clamp(_position1.m22, 0, Raylib.GetScreenHeight() - 150);
+            _position2.m22 = Math.Clamp(_position2.m22, 0, Raylib.GetScreenHeight() - 150);
         }
 
 
         public void Update()
         {
-            _ball.x += _ballVelocity.x;
-            _ball.y += _ballVelocity.y;
+            _ball.m00 += _ballVelocity.x;
+            _ball.m22 += _ballVelocity.y;
 
             // collides with top or bottom
-            if (_ball.y <= 0 || _ball.y >= Raylib.GetScreenHeight())
+            if (_ball.m22 <= 0 || _ball.m22 >= Raylib.GetScreenHeight())
             {
                 _ballVelocity.y = -_ballVelocity.y;
                 count++;
             }
 
             // collides with left side
-            if (_ball.x <= _position1.m00 + 5 && _ball.y >= _position1.m22 && _ball.y <= _position1.m22 + 150)
+            if (_ball.m00 <= _position1.m00 + 5 && _ball.m22 >= _position1.m22 && _ball.m22 <= _position1.m22 + 150)
             {
                 _ballVelocity.x = -_ballVelocity.x;  // invert horizontal direction
                 count++;
             }
 
             //collides with right side
-            if (_ball.x >= _position2.m00- 10 && _ball.y >= _position2.m22 && _ball.y <= _position2.m22 + 150)
+            if (_ball.m00 >= _position2.m00- 10 && _ball.m22 >= _position2.m22 && _ball.m22 <= _position2.m22 + 150)
             {
                 _ballVelocity.x = -_ballVelocity.x;  // invert horizontal direction
                 count++;
@@ -122,10 +124,10 @@ namespace pong
           
 
             
-            if (_ball.x <= 0 || _ball.x >= Raylib.GetScreenWidth())
+            if (_ball.m00 <= 0 || _ball.m00 >= Raylib.GetScreenWidth())
             {
                 
-                if (_ball.x <= 0 || _ball.x >= Raylib.GetScreenWidth())
+                if (_ball.m00 <= 0 || _ball.m00 >= Raylib.GetScreenWidth())
                 {
                     Raylib.CloseWindow(); 
                 }
